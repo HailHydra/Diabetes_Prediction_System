@@ -1,7 +1,7 @@
 from setuptools import find_packages,setup
 
 setup(
-    name='Gemstone Price Prediction',
+    name='Intel_Hack',
     version='1.1.1',
     author='HailHydra',
     author_email='darklususnaturae@gmail.com',

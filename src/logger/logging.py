@@ -1,5 +1,5 @@
-import logging
 import os
+import logging
 from datetime import datetime
 LOG_FILE=f"{datetime.now().strftime('%m_%d_%y_%H_%M_%S')}.log"
 # Constructs the path to the logs directory in the current working directory

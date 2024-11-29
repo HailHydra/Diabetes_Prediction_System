@@ -5,7 +5,7 @@ venv/
 # Build directories
 build/
 dist/
-Gemstone_Price_Prediction.egg-info/
+Intel_Hack.egg-info/
 
 # Artifacts and logs
 artifacts/

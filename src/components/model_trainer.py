@@ -1,67 +1,69 @@
-import pandas as pd
-import numpy as np
-from src.logger.logging import logging
-from src.exceptions.exceptions import customexception
+from xgboost import XGBClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
 import os
 import sys
 from dataclasses import dataclass
-from pathlib import Path
-from src.utility.utility import save_object,evaluate_model
-from sklearn.linear_model import LinearRegression,Lasso,Ridge,ElasticNet
+
+from src.logger.logging import logging
+from src.exceptions.exceptions import customexception
+from src.utility.utility import save_object, evaluate_model
 
 @dataclass
 class ModelTrainerConfig:
-    trained_model_file_path:str=os.path.join('artifacts','models.pkl')
+    trained_model_file_path: str = os.path.join('artifacts', 'xgboost_model.pkl')
 
 class ModelTrainer:
     def __init__(self):
-        self.model_trainer_conifg=ModelTrainerConfig()
+        self.model_trainer_config = ModelTrainerConfig()
 
-    def initiate_model_training(self,train_array,test_array):
+    def initiate_model_training(self, train_array, test_array):
         try:
             logging.info('Splitting dependent and independent variables from train and test data')
-            x_train,y_train,x_test,y_test=(
-                # x_train selects all rows and all columns except the last
-                train_array[:,:-1],
-                # y_train selects all rows and the last column
-                train_array[:,-1],
-                # x_test is same as x_train
-                train_array[:,:-1],
-                # y_test is same as y_train
-                train_array[:,-1]
+
+            # Split the features and target variable (last column) from the train and test arrays
+            x_train, y_train = train_array[:, :-1], train_array[:, -1]
+            x_test, y_test = test_array[:, :-1], test_array[:, -1]
+
+            # Initialize the XGBoost classifier
+            model = XGBClassifier(
+                objective='binary:logistic',  # For binary classification
+                eval_metric='logloss',         # Logistic loss function
+                use_label_encoder=False,       # Suppress warning on label encoding
+                random_state=42                # For reproducibility
             )
 
-            # Dictionary stores instances of different regression models
-            models={
-                'LinearRegression':LinearRegression(),
-                'Lasso':Lasso(),
-                'Ridge':Ridge(),
-                'ElasticNet':ElasticNet()
+            # Train the model
+            logging.info('Training the XGBoost model')
+            model.fit(x_train, y_train)
+
+            # Make predictions on the test data
+            logging.info('Making predictions on the test data')
+            predictions = model.predict(x_test)
+
+            # Evaluate the model using classification metrics
+            accuracy = accuracy_score(y_test, predictions)
+            precision = precision_score(y_test, predictions)
+            recall = recall_score(y_test, predictions)
+            f1 = f1_score(y_test, predictions)
+
+            logging.info(f"Model Evaluation Metrics: Accuracy={accuracy}, Precision={precision}, Recall={recall}, F1-Score={f1}")
+
+            # Save the trained model using utility function
+            save_object(
+                file_path=self.model_trainer_config.trained_model_file_path,
+                obj=model
+            )
+
+            logging.info(f"Trained model saved at {self.model_trainer_config.trained_model_file_path}")
+
+            return {
+                "accuracy": accuracy,
+                "precision": precision,
+                "recall": recall,
+                "f1_score": f1
             }
 
-            # model_report stores the evaluation metrics for each model as dictionary
-            model_report:dict=evaluate_model(x_train,y_train,x_test,y_test,models)
-            print(model_report)
-            print('\n','='*40,'\n')
-            logging.info(f'Model Report : {model_report}')
-
-            # To get best model score from dictionary 
-            best_model_score = max(sorted(model_report.values()))
-
-            best_model_name = list(model_report.keys())[
-                list(model_report.values()).index(best_model_score)
-            ]
-            
-            best_model = models[best_model_name]
-
-            print(f'Best model found , Model Name : {best_model_name} , R2 Score : {best_model_score}')
-            print('\n','='*40,'\n')
-            logging.info(f'Best model is found, Model Name : {best_model_name}, R2 Score : {best_model_score}')
-
-            save_object(
-                file_path=self.model_trainer_conifg.trained_model_file_path,
-                obj=best_model
-            )
         except Exception as e:
-            logging.info("Exception occured at initiate_model_training")
-            raise customexception(e,sys)
+            logging.error("Exception occurred during model training")
+            raise customexception(e, sys)

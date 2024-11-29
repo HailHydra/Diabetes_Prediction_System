@@ -1,15 +1,15 @@
 import pandas as pd
 import numpy as np
-from src.logger.logging import logging
-from src.exceptions.exceptions import customexception
+
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
 import os
 import sys
 from dataclasses import dataclass
-from pathlib import Path
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler, OrdinalEncoder
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
+from src.logger.logging import logging
+from src.exceptions.exceptions import customexception
 from src.utility.utility import save_object
 
 @dataclass
@@ -24,38 +24,31 @@ class DataTransformation:
         try:
             logging.info('Data transformation initiated')
 
-            categorical_cols = ['cut', 'color', 'clarity']
-            numerical_cols = ['carat', 'depth', 'table', 'x', 'y', 'z']
+            # All columns except 'Outcome' are numerical
+            numerical_cols = [
+                'Pregnancies', 'Glucose', 'BloodPressure',
+                'SkinThickness', 'Insulin', 'BMI',
+                'DiabetesPedigreeFunction', 'Age'
+            ]
 
-            cut_categories = ['Fair', 'Good', 'Very Good', 'Premium', 'Ideal']
-            color_categories = ['D', 'E', 'F', 'G', 'H', 'I', 'J']
-            clarity_categories = ['I1', 'SI2', 'SI1', 'VS2', 'VS1', 'VVS2', 'VVS1', 'IF']
+            logging.info('Pipeline initiated for numerical data')
 
-            logging.info('Pipeline initiated')
-
+            # Define a pipeline for numerical preprocessing
             num_pipeline = Pipeline(
                 steps=[
-                    # SimpleImputer is used to replace missing values with median values
+                    # Handle missing values by imputing with the median
                     ('imputer', SimpleImputer(strategy='median')),
-                    # StandardScalar transforms data to have a mean of 0 and a standard deviation of 1
-                    ('scalar', StandardScaler())
-                ]
-            )
-
-            cat_pipeline = Pipeline(
-                steps=[
-                    ('imputer', SimpleImputer(strategy='most_frequent')),
-                    # OrdinalEncoder converts categorical features into numerical format
-                    ('ordinalencoder', OrdinalEncoder(categories=[cut_categories, color_categories, clarity_categories])),
+                    # Standardize numerical features
                     ('scaler', StandardScaler())
                 ]
             )
 
-            preprocessor = ColumnTransformer([
-                # Transformer parameter contains name, transformer object, columns
-                ('num_pipeline', num_pipeline, numerical_cols),
-                ('cat_pipeline', cat_pipeline, categorical_cols)
-            ])
+            # Since there are no categorical columns in this dataset, only a numerical pipeline is needed
+            preprocessor = ColumnTransformer(
+                transformers=[
+                    ('num_pipeline', num_pipeline, numerical_cols)
+                ]
+            )
 
             return preprocessor
 
@@ -74,27 +67,27 @@ class DataTransformation:
 
             preprocessing_obj = self.initiate_data_transformation()
 
-            target_column_name = 'price'
-            drop_columns = [target_column_name, 'id']
-            
-            # axis=0 refers to rows & axis=1 refers to columns
-            input_feature_train_df = train_df.drop(columns=drop_columns, axis=1)
+            # Target column is 'Outcome', and it is binary (0 or 1)
+            target_column_name = 'Outcome'
+
+            # Split features and target for train and test datasets
+            input_feature_train_df = train_df.drop(columns=[target_column_name], axis=1)
             target_feature_train_df = train_df[target_column_name]
 
-            input_feature_test_df = test_df.drop(columns=drop_columns, axis=1)
+            input_feature_test_df = test_df.drop(columns=[target_column_name], axis=1)
             target_feature_test_df = test_df[target_column_name]
 
-            # fit_transform() learns the parameters like SimpleImputer but transform() doesn't recalculate them
+            # Apply the preprocessing object
             input_feature_train_arr = preprocessing_obj.fit_transform(input_feature_train_df)
             input_feature_test_arr = preprocessing_obj.transform(input_feature_test_df)
 
-            logging.info("Applying preprocessing object on training and testing datasets")
+            logging.info("Applied preprocessing object on training and testing datasets")
 
-            # np.c_[] allows you to combine multiple arrays into a single 2D array
-            # Here we combine every other columns with price column
+            # Combine processed features with target arrays
             train_arr = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]
             test_arr = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
 
+            # Save the preprocessor object for future use
             save_object(
                 file_path=self.data_transformation_config.preprocessor_obj_file_path,
                 obj=preprocessing_obj

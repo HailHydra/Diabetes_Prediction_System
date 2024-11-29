@@ -1,6 +1,6 @@
+import pandas as pd
 import os
 import sys
-import pandas as pd
 from src.exceptions.exceptions import customexception
 from src.logger.logging import logging
 from src.utility.utility import load_object
@@ -8,66 +8,80 @@ from src.utility.utility import load_object
 class PredictPipeline:
     def __init__(self):
         pass
-    def predict(self,features):
+
+    def predict(self, features):
         try:
+            # Paths to artifacts (ensure these paths are correct)
+            preprocessor_path = os.path.join('artifacts', 'preprocessor.pkl')
+            model_path = os.path.join('artifacts', 'xgboost_model.pkl')
 
-            # Paths to artifacts
-            preprocessor_path=os.path.join('artifacts','preprocessor.pkl')
-            model_path=os.path.join('artifacts','models.pkl')
-            
-            # preprocessor is loaded with preprocessor object
-            preprocessor=load_object(preprocessor_path)
-            # model is loaded with model object
-            model=load_object(model_path)
+            # Load preprocessor and model
+            preprocessor = load_object(preprocessor_path)
+            model = load_object(model_path)
 
-            # Preprocessing steps like scaling, encoding is done
-            scale_feat=preprocessor.transform(features)
-            # Pre-trained model is used to make predictions
-            pred=model.predict(scale_feat)
+            # Check the loaded preprocessor and model
+            print(f"Preprocessor loaded: {preprocessor}")
+            print(f"Model loaded: {model}")
+
+            # Preprocess the input data (ensure it matches training data format)
+            scale_feat = preprocessor.transform(features)
+            print(f"Processed features: {scale_feat}")
+
+            # Use the trained model to make predictions
+            pred = model.predict(scale_feat)
+
+            # Debugging the prediction result
+            print(f"Prediction result: {pred}")
 
             return pred
 
         except Exception as e:
-            raise customexception(e,sys)
-        
+            print(f"Error in prediction pipeline: {e}")
+            raise customexception(e, sys)
+
+
 class CustomData:
     def __init__(self,
-                 carat:float,
-                 depth:float,
-                 table:float,
-                 x:float,
-                 y:float,
-                 z:float,
-                 cut:str,
-                 color:str,
-                 clarity:str):
+                 Pregnancies: int,
+                 Glucose: float,
+                 BloodPressure: float,
+                 SkinThickness: float,
+                 Insulin: float,
+                 BMI: float,
+                 DiabetesPedigreeFunction: float,
+                 Age: int):
         
-        self.carat=carat
-        self.depth=depth
-        self.table=table
-        self.x=x
-        self.y=y
-        self.z=z
-        self.cut = cut
-        self.color = color
-        self.clarity = clarity
+        self.Pregnancies = Pregnancies
+        self.Glucose = Glucose
+        self.BloodPressure = BloodPressure
+        self.SkinThickness = SkinThickness
+        self.Insulin = Insulin
+        self.BMI = BMI
+        self.DiabetesPedigreeFunction = DiabetesPedigreeFunction
+        self.Age = Age
 
     def get_data_as_dataframe(self):
         try:
-            custom_data_input_dict={
-                'carat':[self.carat],
-                'depth':[self.depth],
-                'table':[self.table],
-                'x':[self.x],
-                'y':[self.y],
-                'z':[self.z],
-                'cut':[self.cut],
-                'color':[self.color],
-                'clarity':[self.clarity]
-                }
+            # Gather the input data into a dictionary
+            custom_data_input_dict = {
+                'Pregnancies': [self.Pregnancies],
+                'Glucose': [self.Glucose],
+                'BloodPressure': [self.BloodPressure],
+                'SkinThickness': [self.SkinThickness],
+                'Insulin': [self.Insulin],
+                'BMI': [self.BMI],
+                'DiabetesPedigreeFunction': [self.DiabetesPedigreeFunction],
+                'Age': [self.Age]
+            }
+            # Convert dictionary to DataFrame
             df = pd.DataFrame(custom_data_input_dict)
+
+            # Log and return the dataframe
             logging.info('Dataframe Gathered')
+            print(f"Dataframe: {df}")
             return df
+
         except Exception as e:
-            logging.info('Exception Occured in prediction pipeline')
-            raise customexception(e,sys)
+            logging.error('Exception occurred while creating the dataframe')
+            print(f"Error in dataframe creation: {e}")
+            raise customexception(e, sys)

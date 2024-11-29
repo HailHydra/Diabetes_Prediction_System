@@ -1,92 +1,135 @@
-<h1>Gemstone Price Prediction</h1>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diamond Price Prediction</title>
+    <title>Diabetes Prediction</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            font-size: 14px; /* Reduced font size */
+        }
+
+        h1 {
+            background-color: #007BFF;
+            color: white;
+            padding: 12px 0; /* Slightly reduced padding */
+            margin: 0;
+            font-size: 22px; /* Reduced font size */
+        }
+
+        form {
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
         .form-group {
             margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 13px; /* Reduced font size */
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 8px; /* Reduced padding */
+            margin-top: 5px;
+            font-size: 13px; /* Reduced font size */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            font-size: 14px; /* Reduced font size */
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 16px; /* Reduced font size */
+            color: #555;
         }
     </style>
 </head>
 <body>
 
+    <h1>Diabetes Prediction</h1>
+
     <form action="{{ url_for('predict_datapoint') }}" method="POST">
         <div class="form-group">
-            <label for="carat">Carat:</label>
-            <input type="number" id="carat" name="carat" placeholder="Enter carat value (float)" step="0.01" required>
+            <label for="Pregnancies">Pregnancies: (If male enter 0)</label>
+            <input type="number" id="Pregnancies" name="Pregnancies" placeholder="Enter number of pregnancies" required>
         </div>
 
         <div class="form-group">
-            <label for="depth">Depth:</label>
-            <input type="number" id="depth" name="depth" placeholder="Enter depth value (float)" step="0.01" required>
+            <label for="Glucose">Glucose:</label>
+            <input type="number" min="0" max="199" id="Glucose" name="Glucose" placeholder="Enter glucose level" required>
         </div>
 
         <div class="form-group">  
-            <label for="table">Table:</label>
-            <input type="number" id="table" name="table" placeholder="Enter table value (float)" step="0.01" required>
+            <label for="BloodPressure">Blood Pressure:</label>
+            <input type="number" min="0" max="120" id="BloodPressure" name="BloodPressure" placeholder="Enter blood pressure level" required>
         </div>
         
         <div class="form-group">
-            <label for="x">x:</label>
-            <input type="number" id="x" name="x" placeholder="Enter x value (float)" step="0.01" required>
+            <label for="SkinThickness">Skin Thickness:</label>
+            <input type="number" min="0" max="99" id="SkinThickness" name="SkinThickness" placeholder="Enter skin thickness" required>
         </div>
       
         <div class="form-group">
-            <label for="y">y:</label>
-            <input type="number" id="y" name="y" placeholder="Enter y value (float)" step="0.01" required>
+            <label for="Insulin">Insulin:</label>
+            <input type="number" min="0" max="900" id="Insulin" name="Insulin" placeholder="Enter insulin level" required>
         </div>
       
         <div class="form-group">
-            <label for="z">z:</label>
-            <input type="number" id="z" name="z" placeholder="Enter z value (float)" step="0.01" required>
-        </div>         
+            <label for="BMI">BMI:</label>
+            <input type="number" min="17" max="67" step="any" id="BMI" name="BMI" placeholder="Enter BMI" required>
+        </div>  
 
         <div class="form-group">
-            <label for="cut">Cut:</label>
-            <select id="cut" name="cut" required>
-                <option value="Fair">Fair</option>
-                <option value="Good">Good</option>
-                <option value="Very Good">Very Good</option>
-                <option value="Premium">Premium</option>
-                <option value="Ideal">Ideal</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="color">Color:</label>
-            <select id="color" name="color" required>
-                <option value="D">D</option>
-                <option value="E">E</option>
-                <option value="F">F</option>
-                <option value="G">G</option>
-                <option value="H">H</option>
-                <option value="I">I</option>
-                <option value="J">J</option>
-            </select>
+            <label for="DiabetesPedigreeFunction">Diabetes Pedigree Function:</label>
+            <input type="number" min="0" max="2" step="any" id="DiabetesPedigreeFunction" name="DiabetesPedigreeFunction" placeholder="Enter diabetes pedigree function" required>
         </div>
 
         <div class="form-group">
-            <label for="clarity">Clarity:</label>
-            <select id="clarity" name="clarity" required>
-                <option value="I1">I1</option>
-                <option value="SI2">SI2</option>
-                <option value="SI1">SI1</option>
-                <option value="VS2">VS2</option>
-                <option value="VS1">VS1</option>
-                <option value="VVS2">VVS2</option>
-                <option value="VVS1">VVS1</option>
-                <option value="IF">IF</option>
-            </select>
+            <label for="Age">Age:</label>
+            <input type="number" min="0" max="100" id="Age" name="Age" placeholder="Enter age" required>
         </div>
 
         <input type="submit" value="Submit">
     </form>
 
     {% if final_result %}
-        <h2>Gemstone price will be {{ final_result }}</h2>
+    <div class="result">
+        <h2>Prediction Result: {{ final_result }}</h2>
+    </div>
     {% endif %}
+
 </body>
 </html>
