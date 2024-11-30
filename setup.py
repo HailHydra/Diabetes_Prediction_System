@@ -11,9 +11,11 @@ setup(
         'numpy',
         'seaborn',
         'flask',
-        'mlflow',
         'ipykernel',
         'xgboost',
+        'requests aiohttp',
+        'scikit-learn-intelex',
+        'modin[ray]'
     ],
     packages=find_packages()
 )

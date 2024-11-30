@@ -1,4 +1,8 @@
 from xgboost import XGBClassifier
+
+from sklearnex import patch_sklearn
+patch_sklearn()
+
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 import os
@@ -11,7 +15,7 @@ from src.utility.utility import save_object, evaluate_model
 
 @dataclass
 class ModelTrainerConfig:
-    trained_model_file_path: str = os.path.join('artifacts', 'xgboost_model.pkl')
+    trained_model_file_path: str = os.path.join("artifacts", "xgboost_model.pkl")
 
 class ModelTrainer:
     def __init__(self):

@@ -1,5 +1,12 @@
-import pandas as pd
+import modin.pandas as pd
+import ray
+ray.shutdown()  # Properly shut down the Ray runtime before re-initializing
+ray.init()      # Now you can call init again
+
 import numpy as np
+
+from sklearnex import patch_sklearn
+patch_sklearn()
 
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
@@ -14,7 +21,7 @@ from src.utility.utility import save_object
 
 @dataclass
 class DataTransformationConfig:
-    preprocessor_obj_file_path = os.path.join('artifacts', 'preprocessor.pkl')
+    preprocessor_obj_file_path = os.path.join("artifacts", "preprocessor.pkl")
 
 class DataTransformation:
     def __init__(self):

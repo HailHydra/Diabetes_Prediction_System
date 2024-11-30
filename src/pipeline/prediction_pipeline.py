@@ -1,4 +1,8 @@
-import pandas as pd
+import modin.pandas as pd
+import ray
+ray.shutdown()  # Properly shut down the Ray runtime before re-initializing
+ray.init()      # Now you can call init again
+
 import os
 import sys
 from src.exceptions.exceptions import customexception

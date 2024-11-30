@@ -1,3 +1,6 @@
+from sklearnex import patch_sklearn
+patch_sklearn()
+
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 import os

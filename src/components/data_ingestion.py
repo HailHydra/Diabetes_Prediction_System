@@ -1,5 +1,13 @@
-import pandas as pd
-from sklearn.model_selection import train_test_split
+import modin.pandas as pd
+import ray
+ray.init()      # Now you can call init again
+
+from sklearnex import patch_sklearn
+patch_sklearn()
+
+from sklearn.model_selection import train_test_split 
+# sklearnex doesnot support train_test_split, so it fallbacks to original Scikit-learn
+
 import os
 import sys
 from dataclasses import dataclass
@@ -21,7 +29,7 @@ class DataIngestion:
         logging.info("Data ingestion started")
         try:
             # Update the path to point to the diabetes dataset
-            data = pd.read_csv("C:/Users/Varun/Music/Intel_Hack/diabetes.csv")
+            data = pd.read_csv(r'https://raw.githubusercontent.com/HailHydra/Intel_Hack/refs/heads/main/diabetes.csv')
             logging.info("Successfully read the diabetes dataset")
 
             # Create directories for saving raw and processed data
