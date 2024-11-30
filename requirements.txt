@@ -1,0 +1,11 @@
+pandas
+scikit-learn
+numpy
+seaborn
+flask
+ipykernel
+xgboost
+requests
+aiohttp
+scikit-learn-intelex
+modin[ray]
