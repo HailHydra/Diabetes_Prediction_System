@@ -1,6 +1,6 @@
 import modin.pandas as pd
 import ray
-ray.init()      # Now you can call init again
+ray.init() # Initialize ray for modin.pandas
 
 from sklearnex import patch_sklearn
 patch_sklearn()
@@ -29,7 +29,7 @@ class DataIngestion:
         logging.info("Data ingestion started")
         try:
             # Update the path to point to the diabetes dataset
-            data = pd.read_csv(r'https://raw.githubusercontent.com/HailHydra/Intel_Hack/refs/heads/main/diabetes.csv')
+            data = pd.read_csv(r'https://raw.githubusercontent.com/HailHydra/Diabetes_Prediction_System/refs/heads/main/diabetes.csv')
             logging.info("Successfully read the diabetes dataset")
 
             # Create directories for saving raw and processed data
