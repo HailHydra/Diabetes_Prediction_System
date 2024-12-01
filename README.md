@@ -1,41 +1,49 @@
+
 Diabetes Prediction System
 ==========================
 
-This project applies machine learning to predict the likelihood of diabetes based on user-provided medical and demographic data. Designed as a web application, it supports early detection and proactive management of diabetes by generating real-time predictions.
+The Diabetes Prediction System leverages machine learning to predict the likelihood of diabetes based on user-provided medical and demographic data. This web application aims to support early detection and proactive diabetes management through real-time predictions.
 
 Features
 --------
-- User-friendly Web Interface: Access predictions by entering basic medical details.
-- Intel Optimized Libraries: Includes scikit-learn-intelex and modin.pandas for efficient processing.
-- Predictive Analysis: Uses XGBoost for reliable diabetes predictions.
+- User-Friendly Web Interface: Easily accessible web application for inputting medical data.
+- Intel Optimized Libraries: Efficient data processing using scikit-learn-intelex and modin.pandas.
+- Predictive Analysis: Robust diabetes prediction powered by the XGBoost model.
 
 Setup Instructions
 ------------------
 
 Prerequisites
 -------------
-- Python installed on your system.
+- Python (version 3.7 or higher) installed on your system.
 - Git Bash for initializing Ray locally.
-- Recommended: Conda or a similar Python environment manager.
+- Recommended: A Python environment manager such as Conda.
 
 Step 1: Set Up the Python Environment
 -------------------------------------
+
 1. Create a virtual environment:
-   python -m venv env
-   or with Conda:
-   conda create --name diabetes-prediction python=3.12.7
+    - For venv:
+        python -m venv env
+    - For Conda:
+        conda create --name diabetes-prediction python=3.12.7
 
 2. Activate the environment:
-   - For venv:
-       source env/bin/activate   # On MacOS/Linux
-       env\Scripts\activate    # On Windows
-   - For Conda:
-       conda activate diabetes-prediction
+    - For venv:
+        - On macOS/Linux:
+            source env/bin/activate
+        - On Windows:
+            env\Scripts\activate
+    - For Conda:
+        conda activate diabetes-prediction
 
 Step 2: Install Required Packages
 ---------------------------------
 Run the following command to install all dependencies:
     pip install -r requirements.txt
+
+If you are using anaconda for environment management, install sklearnex using conda-forge:
+    conda install -c conda-forge scikit-learn-intelex
 
 Step 3: Install the Package
 ---------------------------
