@@ -1,4 +1,3 @@
-
 Diabetes Prediction System
 ==========================
 
@@ -7,7 +6,7 @@ This project applies machine learning to predict the likelihood of diabetes base
 Features
 --------
 - User-friendly Web Interface: Access predictions by entering basic medical details.
-- Intel Optimized Libraries: Includes `scikit-learn-intelex` and `modin.pandas` for efficient processing.
+- Intel Optimized Libraries: Includes scikit-learn-intelex and modin.pandas for efficient processing.
 - Predictive Analysis: Uses XGBoost for reliable diabetes predictions.
 
 Setup Instructions
@@ -24,7 +23,7 @@ Step 1: Set Up the Python Environment
 1. Create a virtual environment:
    python -m venv env
    or with Conda:
-   conda create --name diabetes-prediction python=3.9
+   conda create --name diabetes-prediction python=3.12.7
 
 2. Activate the environment:
    - For venv:
@@ -38,17 +37,22 @@ Step 2: Install Required Packages
 Run the following command to install all dependencies:
     pip install -r requirements.txt
 
-Step 3: Initialize Ray for `modin.pandas`
+Step 3: Install the Package
+---------------------------
+Run the following command to install the package using setup.py:
+    python setup.py install
+
+Step 4: Initialize Ray for modin.pandas
 -----------------------------------------
 To enable parallelized data processing, start Ray locally using Git Bash:
     ray start --head
 
-Step 4: Launch the Application
+Step 5: Launch the Application
 ------------------------------
 Run the application script:
     python app.py
 
-Step 5: Access the Web Application
+Step 6: Access the Web Application
 ----------------------------------
 Open your browser and navigate to:
     http://localhost:8000

@@ -1,5 +1,6 @@
 import modin.pandas as pd
 import ray
+ray.shutdown() # Shutdown ray if it was initialized before
 ray.init() # Initialize ray for modin.pandas
 
 from sklearnex import patch_sklearn

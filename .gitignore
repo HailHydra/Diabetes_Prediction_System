@@ -5,12 +5,11 @@ venv/
 # Build directories
 build/
 dist/
-Intel_Hack.egg-info/
+Diabetes_Prediction_System.egg-info/
 
 # Artifacts and logs
 artifacts/
 logs/
-mlruns/
 
 # Python cache directories
 **/__pycache__/

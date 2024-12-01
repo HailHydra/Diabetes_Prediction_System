@@ -1,7 +1,12 @@
 from flask import Flask, request, render_template
-from src.pipeline.prediction_pipeline import PredictPipeline, CustomData
+from src.pipeline.training_pipeline import TrainingPipeline  # Import the training_pipeline
+from src.pipeline.prediction_pipeline import PredictPipeline, CustomData # Import the prediction_pipeline
 
 app = Flask(__name__)
+
+# Create an instance of the training_pipeline class and start training
+training_pipeline = TrainingPipeline()
+training_pipeline.start_training()  # Train the model once when the app starts
 
 @app.route('/')
 def home_page():
